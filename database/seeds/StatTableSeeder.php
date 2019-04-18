@@ -21,5 +21,13 @@ class StatTableSeeder extends Seeder
         Stat::create([
             'name' => 'bargaining',
         ]);
+
+        Stat::create([
+            'name' => 'currHp',
+        ]);
+
+        Stat::create([
+            'name'=> 'weapon',
+        ]);
     }
 }

@@ -27,7 +27,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('lastenergyupdate')->default(Carbon::now()->toDateTimeString());
             $table->integer('experience')->default(0);
             $table->integer('level')->unsigned()->default(1);
-            $table->double('hp')->unsigned()->default(100);
             $table->rememberToken();
             $table->timestamps();
         });

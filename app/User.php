@@ -54,6 +54,11 @@ class User extends Authenticatable
     public function stats(){
         return $this->belongsToMany(Stat::class)->withPivot('value');
     }
+
+    public function items(){
+        return $this->belongsToMany(Item::class)->withPivot('value');
+    }
+
     public function isAdmin(){
         if($this->role->name == 'admin')
             return true;
@@ -81,17 +86,25 @@ class User extends Authenticatable
             $this->save();
         }
     }
-    public function showTimeToNext()
-    {
-        $last = Carbon::parse($this->lastenergyupdate);
-        $last->addMinutes(10);
-        $diff = Carbon::now()->diffForHumans($last);
-        $energy = $this->actionpoints;
-        if($energy < 100)
-            return $diff;
-        return '-/-';
 
+    public function showStat($stat)
+    {
+        return $this->stats->find($stat)->pivot->value;
     }
+
+    public function calcMaxHealth()
+    {
+        $max = 100;
+        $i = $this->stats->find(1)->pivot->value;
+        for($i;$i>1; $i--)
+        {
+            $max = $max+$max*0.1;
+        }
+        if($this->stats->find(4)->pivot->value > $max)
+            $this->stats()->updateExistingPivot(4, ['value'=>$max]);
+        return $max;
+    }
+
 
     public function calcTimeForJS()
     {
@@ -104,15 +117,16 @@ class User extends Authenticatable
     public function calcTrainingCost($stat){
         switch($stat){
             case 1:
-                return round (100*$this->strength);
+                return  round ($this->stats->find($stat)->pivot->value*100);
                 break;
 
             case 2:
-                return round (100*$this->accuracy);
+                return  round ($this->stats->find($stat)->pivot->value*100);
                 break;
 
             case 3:
-                return round(100*$this->bargaining+(15/100*($this->bargaining+15)));
+                $val = $this->stats->find($stat)->pivot->value;
+                return  round ($val*100+(15/100*($val+50)));
                 break;
 
             default:
@@ -121,47 +135,7 @@ class User extends Authenticatable
         }
 
     }
-    public function calcItemBonus($stat){
-        switch ($stat) {
-            case 1:
-                $value = (($this->getEquippedWeapon()) ? $this->getEquippedWeapon()->str : 0) + (($this->getEquippedArmour()) ? $this->getEquippedArmour()->str : 0);
-                return $value;
-            case 2:
-                $value = (($this->getEquippedWeapon()) ? $this->getEquippedWeapon()->acc : 0) + (($this->getEquippedArmour()) ? $this->getEquippedArmour()->acc : 0);
-                return $value;
-            case 3:
-                $value = (($this->getEquippedWeapon()) ? $this->getEquippedWeapon()->bar : 0) + (($this->getEquippedArmour()) ? $this->getEquippedArmour()->bar : 0);
-                return $value;
-        }
-    }
 
-    public function calcOverallStat($stat){
-        switch ($stat) {
-            case 1:
-                return $this->calcItemBonus(1)+$this->strength;
-                break;
-            case 2:
-                return $this->calcItemBonus(2)+$this->accuracy;
-                break;
-            case 3:
-                return $this->calcItemBonus(3)+$this->bargaining;
-                break;
-        }
-    }
-    public function items(){
-        return $this->hasMany(Item::class);
-    }
+    
 
-    public function getEquippedWeapon(){
-        return Item::where('user_id', $this->id)->where('type','weapon')->where('isEquipped', 1)->first();
-    }
-
-    public function getEquippedArmour(){
-        return Item::where('user_id', $this->id)->where('type','armour')->where('isEquipped', 1)->first();
-    }
-
-    public function getAllItems()
-    {
-        return Item::where('user_id', $this->id)->where('isEquipped', '0')->get();
-    }
 }

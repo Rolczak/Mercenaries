@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateItemsTable extends Migration
+class CreateItemStatTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->enum('type',['weapon','armor']);
-            $table->timestamps();
+        Schema::create('item_stat', function (Blueprint $table) {
+            $table->bigInteger('stat_id');
+            $table->bigInteger('item_id');
+            $table->integer('value');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('item_stat');
     }
 }

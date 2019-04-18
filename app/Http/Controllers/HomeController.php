@@ -60,9 +60,9 @@ class HomeController extends Controller
         if($user->credits >= $cost )
         {
             $user->credits -= $cost;
-            return $user->stats->find($stat)->pivot->value;
-          return  $val =  $user->stats->pivot()->wherePivot('stat_id', $stat)->value;
+            $val =   $user->stats->find($stat)->pivot->value+1;
             $user->stats()->updateExistingPivot($stat, ['value'=>$val]);
+            $user->save();
 
         }
         return view('training');

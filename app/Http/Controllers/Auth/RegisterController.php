@@ -74,6 +74,8 @@ class RegisterController extends Controller
         {
             $user->stats()->attach($stat->id);
         }
+        $user->stats()->updateExistingPivot(4, ['value'=>100]);
+        $user->stats()->updateExistingPivot(5, ['value'=>0]);
         return $user;
     }
 }

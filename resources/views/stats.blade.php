@@ -6,30 +6,20 @@
 <div>
     <h3>{{$user->name}}</h3>
     <ul class="list-group">
-        <li class="list-group-item">Healt Point: {{$user->hp}}</li>
-        <li class="list-group-item">Strength: {{$user->strength}}  + {{$user->calcItemBonus(1)}} = {{$user->calcOverallStat(1)}}</li>
-        <li class="list-group-item">Accuracy: {{$user->accuracy}} + {{$user->calcItemBonus(2)}} = {{$user->calcOverallStat(2)}}</li>
-        <li class="list-group-item">Bargaining: {{$user->bargaining}} + {{$user->calcItemBonus(3)}} = {{$user->calcOverallStat(3)}}</li>
+        <li class="list-group-item">
+            <p>HP: </p>
+             <div class="progress">
+                <?php
+                    /*Calculate percents for progressbar */
+                    $per = $user->stats->find(4)->pivot->value/$user->calcMaxHealth()*100;
+                ?>
+               <div class="progress-bar bg-danger" role="progressbar" style="width: {{$per}}%;" aria-valuenow="{{$user->stats->find(4)->pivot->value}}" aria-valuemin="0" aria-valuemax="{{$user->calcMaxHealth()}}">{{$user->stats->find(4)->pivot->value}}/{{$user->calcMaxHealth()}}</div>
+            </div>
+        </li>
+        @foreach($user->stats as $stat)
+           <li class="list-group-item">{{$stat->name}}: {{$stat->pivot->value}}</li>
+        @endforeach
     </ul>
 </div>
-<h3>Weapon: </h3>
-@if($user->getEquippedWeapon())
-    {{$user->getEquippedWeapon()->name}}
-@else
-    None
-@endif
-<h3>Armour: </h3>
-@if($user->getEquippedArmour())
-    {{$user->getEquippedArmour()->name}}
-@else
-    None
-@endif
 
-
-    @if($id == Auth::User()->id)
-      <h2>Ekwipunek</h2>
-        @foreach(Auth::User()->getAllItems() as $item)
-            {{$item->name}}
-        @endforeach
-    @endif
 @stop
