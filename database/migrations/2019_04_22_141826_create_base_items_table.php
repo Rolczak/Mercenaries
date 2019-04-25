@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateItemUserTable extends Migration
+class CreateBaseItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateItemUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('item_user', function (Blueprint $table) {
-            $table->bigInteger('user_id');
-            $table->bigInteger('item_id');
+        Schema::create('base_items', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->enum('type',['weapon','armor']);
+            $table->string('image_path');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +29,6 @@ class CreateItemUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_user');
+        Schema::dropIfExists('base_items');
     }
 }

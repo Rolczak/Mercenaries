@@ -15,8 +15,8 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->enum('type',['weapon','armor']);
+            $table->bigInteger('base_item_id');
+            $table->bigInteger('user_id');
             $table->timestamps();
         });
     }

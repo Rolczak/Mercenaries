@@ -54,6 +54,7 @@
                 <form id="bar" method="post" action="{{action('HomeController@train',['stat'=>3])}}">@csrf</form>
                 <button form="bar" class="btn-dark">Train &nbsp;<i class="fas fa-plus"></i></button>
             </div>
+
         </div>
     </div>
 @stop

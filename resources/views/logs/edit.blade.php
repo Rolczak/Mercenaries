@@ -17,8 +17,7 @@
         </div>
 
     </form>
-    </div>
-</div>
+
         <form id="delete" class="form form-horizontal" method="POST" action="{{action('LogController@destroy', [$log->id])}}">
             @csrf
             @method('delete')
@@ -27,6 +26,7 @@
     <button type="submit" class="btn btn-dark" form="edit">Submit</button>
     <button type="submit" class="btn btn-dark" form="delete">Delete Post</button>
 
-
+    </div>
+</div>
 
 @stop

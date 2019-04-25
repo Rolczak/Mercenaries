@@ -98,6 +98,11 @@
                                <a href="#" class="list-group-item" data-parent="#menu1sub1sub2">Subitem 5 e.2</a>
                            </div>-->
                        </div>
+                        <a href="#menu1sub2" class="list-group-item" data-toggle="collapse" aria-expanded="false">Items</a>
+                        <div class="collapse" id="menu1sub2">
+                            <a href="{{url('admin/items/create')}}" class="list-group-item" data-parent="#menu1sub1">Create</a>
+                            <a href="{{url('admin/items')}}" class="list-group-item" data-parent="#menu1sub1">Edit</a>
+                        </div>
                        <a href="#" class="list-group-item" data-parent="#menu1">asd</a>
                        <a href="#" class="list-group-item" data-parent="#menu1">dsa</a>
                     </div>

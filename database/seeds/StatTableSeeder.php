@@ -29,5 +29,17 @@ class StatTableSeeder extends Seeder
         Stat::create([
             'name'=> 'weapon',
         ]);
+
+        Stat::create([
+            'name' => 'armor',
+        ]);
+
+        Stat::create([
+            'name'=> 'damage',
+        ]);
+
+        Stat::create([
+            'name'=>'health',
+        ]);
     }
 }

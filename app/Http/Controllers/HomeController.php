@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,6 +67,18 @@ class HomeController extends Controller
 
         }
         return view('training');
+    }
+
+    public function equip()
+    {
+        Auth::user()->equip(Item::find(request()->item));
+        return back();
+    }
+
+    public function unEquip()
+    {
+        Auth::user()->unEquip(Item::find(request()->item));
+        return back();
     }
 
 }

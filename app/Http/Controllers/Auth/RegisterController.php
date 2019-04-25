@@ -63,19 +63,24 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-        $stats = Stat::all();
-        foreach($stats as $stat)
-        {
-            $user->stats()->attach($stat->id);
-        }
-        $user->stats()->updateExistingPivot(4, ['value'=>100]);
-        $user->stats()->updateExistingPivot(5, ['value'=>0]);
-        return $user;
-    }
+{
+    $user = User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => Hash::make($data['password']),
+    ]);
+    $user->stats()->attach(1);
+    $user->stats()->attach(2);
+    $user->stats()->attach(3);
+    $user->stats()->attach(4);
+    $user->stats()->attach(5);
+    $user->stats()->attach(6);
+    $user->stats()->updateExistingPivot(1, ['value'=>1]);
+    $user->stats()->updateExistingPivot(2, ['value'=>1]);
+    $user->stats()->updateExistingPivot(3, ['value'=>1]);
+    $user->stats()->updateExistingPivot(4, ['value'=>100]);
+    $user->stats()->updateExistingPivot(5, ['value'=>0]);
+    $user->stats()->updateExistingPivot(6, ['value'=>0]);
+    return $user;
+}
 }
