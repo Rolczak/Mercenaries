@@ -1,10 +1,12 @@
 @extends('layouts.main')
 @section('content')
-
+<?php
+$stat = 0;
+?>
     <div class="row">
         <div class="col">
             <h2>Add new item</h2>
-            <form class="form form-horizontal" method="POST" action="{{action('ItemController@store')}}">
+            <form id="create" class="form form-horizontal" method="POST" action="{{action('ItemController@store')}}">
                 @csrf
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -18,9 +20,31 @@
                     <option value="weapon">Weapon</option>
                     <option value="armor">Armor</option>
                 </select>
+                <div class="row">
+                    <select name="stat-1" form="create">
+                        @foreach(\App\Stat::all() as $stat)
+                            <option value="{{$stat->name}}">{{$stat->name}}</option>
+                        @endforeach
+                            <input type="number" name="stat-1-val">
+                    </select>
 
-                <button type="submit" class="btn btn-dark">Submit</button>
+
+                </div>
+
             </form>
+            <button class="btn btn-primary" id="but">+</button>
         </div>
+
     </div>
+
+
+    <button type="submit" form="create" class="btn btn-dark">Submit</button>
+
+<script>
+    $("#but").click(function(){
+        $(this).after("<div class='myClass'>Another paragraph!</div>");
+
+    });
+
+</script>
 @endsection('content')

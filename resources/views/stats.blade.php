@@ -11,17 +11,34 @@
                 <div class="progress">
                     <?php
                     /*Calculate percents for progressbar */
-                    $per = $user->stats->find(4)->pivot->value / $user->calcMaxHealth() * 100;
+                    $per = $user->getStat('currHp') / $user->calcMaxHealth() * 100;
                     ?>
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: {{$per}}%;"
-                         aria-valuenow="{{$user->stats->find(4)->pivot->value}}" aria-valuemin="0"
-                         aria-valuemax="{{$user->calcMaxHealth()}}">{{$user->stats->find(4)->pivot->value}}
+                    <div class="progress-bar bg-danger text-dark" role="progressbar" style="width: {{$per}}%;"
+                         aria-valuenow="{{$user->getStat('currHp')}}" aria-valuemin="0"
+                         aria-valuemax="{{$user->calcMaxHealth()}}">{{$user->getStat('currHp')}}
                         /{{$user->calcMaxHealth()}}</div>
                 </div>
             </li>
-            <li class="list-group-item">{{ucfirst($user->stats->find(1)->name)}}: {{$user->getStat('strength')}} + {{$user->calcItemBonus('strength')}} = {{$user->calcStat('strength')}} </li>
-            <li class="list-group-item">{{ucfirst($user->stats->find(2)->name)}}: {{$user->getStat('accuracy')}} + {{$user->calcItemBonus('accuracy')}} = {{$user->calcStat('accuracy')}} </li>
-            <li class="list-group-item">{{ucfirst($user->stats->find(3)->name)}}: {{$user->getStat('bargaining')}} + {{$user->calcItemBonus('bargaining')}} = {{$user->calcStat('bargaining')}} </li>
+
+            <li class="list-group-item">
+                <p>XP: </p>
+                <div class="progress">
+                    <?php
+                    /*Calculate xp for progressbar */
+                    $per = $user->getStat('experience') / $user->expToNext() * 100;
+                    ?>
+                    <div class="progress-bar bg-warning text-dark" role="progressbar" style="width: {{$per}}%;"
+                         aria-valuenow="{{$user->getStat('experience')}}" aria-valuemin="0"
+                         aria-valuemax="{{$user->expToNext()}}">{{$user->getStat('experience')}}
+                        /{{$user->expToNext()}}</div>
+                </div>
+            </li>
+            <li class="list-group-item">{{ucfirst($user->stats->find(1)->name)}}: {{$user->getStat('strength')}}
+                + {{$user->calcItemBonus('strength')}} = {{$user->calcStat('strength')}} </li>
+            <li class="list-group-item">{{ucfirst($user->stats->find(2)->name)}}: {{$user->getStat('accuracy')}}
+                + {{$user->calcItemBonus('accuracy')}} = {{$user->calcStat('accuracy')}} </li>
+            <li class="list-group-item">{{ucfirst($user->stats->find(3)->name)}}: {{$user->getStat('bargaining')}}
+                + {{$user->calcItemBonus('bargaining')}} = {{$user->calcStat('bargaining')}} </li>
             <li class="list-group-item">Damage: {{$user->minDamage()}} - {{$user->maxDamage()}} dmg</li>
         </ul>
         <h2>Weapon: </h2>
@@ -35,7 +52,10 @@
                         <li class="list-group-item bg-dark">{{ucfirst($stat->name)}}: {{$stat->pivot->value}}</li>
                     @endforeach
                 </ul>
-                <a href="{{action('HomeController@unEquip', ['item'=>$user->getEquipped('weapon')])}}" class="card-link">UnEquip</a>
+                <a href="{{action('HomeController@unEquip', ['item'=>$user->getEquipped('weapon')])}}"
+                   class="card-link">
+                    <button class="btn btn-outline-light my-1">UnEquip</button>
+                </a>
             </div>
         @endif
 
@@ -51,7 +71,10 @@
                     @endforeach
                 </ul>
                 @if($user->id==Auth::user()->id)
-                <a href="{{action('HomeController@unEquip', ['item'=>$user->getEquipped('armor')])}}" class="card-link">UnEquip</a>
+                    <a href="{{action('HomeController@unEquip', ['item'=>$user->getEquipped('armor')])}}"
+                       class="card-link">
+                        <button class="btn btn-outline-light my-1">UnEquip</button>
+                    </a>
                 @endif
             </div>
         @else
@@ -72,7 +95,9 @@
                         @endforeach
                     </ul>
                     @if($user->id==Auth::user()->id)
-                    <a href="{{action('HomeController@equip', ['item'=>$item])}}" class="card-link">Equip</a>
+                        <a href="{{action('HomeController@equip', ['item'=>$item])}}" class="card-link">
+                            <button class="btn btn-outline-light my-1">Equip</button>
+                        </a>
                     @endif
                 </div>
             @endforeach

@@ -75,12 +75,16 @@ class RegisterController extends Controller
     $user->stats()->attach(4);
     $user->stats()->attach(5);
     $user->stats()->attach(6);
+    $user->stats()->attach(10);
+    $user->stats()->attach(11);
     $user->stats()->updateExistingPivot(1, ['value'=>1]);
     $user->stats()->updateExistingPivot(2, ['value'=>1]);
     $user->stats()->updateExistingPivot(3, ['value'=>1]);
     $user->stats()->updateExistingPivot(4, ['value'=>100]);
     $user->stats()->updateExistingPivot(5, ['value'=>0]);
     $user->stats()->updateExistingPivot(6, ['value'=>0]);
+    $user->stats()->updateExistingPivot(10, ['value'=>0]);
+    $user->stats()->updateExistingPivot(11, ['value'=>1]);
     return $user;
 }
 }

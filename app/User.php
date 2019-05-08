@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'actionpoints', 'lastenergyupdate'
+        'name', 'email', 'password', 'action_points', 'last_energy_update'
     ];
 
     /**
@@ -73,9 +73,9 @@ class User extends Authenticatable
     public function calcEnergy()
     {
 
-        $last = Carbon::parse($this->lastenergyupdate);
+        $last = Carbon::parse($this->last_energy_update);
         $diff = $last->diffInMinutes(Carbon::now());
-        $energy = $this->actionpoints;
+        $energy = $this->action_points;
         floor($diff);
         if ($diff >= 10) {
             for ($i = $diff / 10; $i > 0; $i--) {
@@ -84,8 +84,8 @@ class User extends Authenticatable
                     $energy++;
 
             }
-            $this->actionpoints = $energy;
-            $this->lastenergyupdate = Carbon::now()->toDateTimeString();
+            $this->action_points = $energy;
+            $this->last_energy_update = Carbon::now()->toDateTimeString();
             $this->save();
         }
     }
@@ -111,6 +111,11 @@ class User extends Authenticatable
 
 
         return $val;
+    }
+
+    public function setStat($stat, $val)
+    {
+        return $this->stats()->updateExistingPivot($this->stats->where('name', $stat)->first()->id, ['value' =>$val]);
     }
 
     public function calcItemBonus($stat)
@@ -141,14 +146,36 @@ class User extends Authenticatable
         return $this->calcItemBonus('damage') + 0.1 * $this->calcItemBonus('damage');
     }
 
+    public function checkLvlUp()
+    {
+        if($this->expToNext()!= 'max')
+        if($this->getStat('experience')>=$this->expToNext())
+            $this->lvlUp();
+    }
+
+    public function lvlUp()
+    {
+        $this->setStat('experience', $this->getStat('experience')-$this->expToNext());
+        $this->setStat('level', $this->getStat('level')+1);
+    }
+
+    public function expToNext()
+    {
+        if(!ExpToNext::find($this->getStat('level')+1))
+            return 'max';
+        else
+             return ExpToNext::find($this->getStat('level')+1)->experience;
+    }
+
     public function calcMaxHealth()
     {
-        $max = 100;
+        $max = 100+10*$this->getStat('level');
         $i = $this->calcStat('strength');
 
         for ($i; $i > 1; $i--) {
             $max = $max + $max * 0.1;
         }
+
         $max = round($max += $this->calcItemBonus('health'));
         if ($this->stats->find(4)->pivot->value > $max)
             $this->stats()->updateExistingPivot(4, ['value' => $max]);
@@ -158,9 +185,9 @@ class User extends Authenticatable
 
     public function calcTimeForJS()
     {
-        $last = Carbon::parse($this->lastenergyupdate);
+        $last = Carbon::parse($this->last_energy_update);
         $last->addMinutes(10);
-        if ($this->actionpoints < 100)
+        if ($this->action_points < 100)
             return $last;
         return false;
     }

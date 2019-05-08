@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Auth::routes();
 
@@ -25,6 +25,8 @@ Route::post('/work', 'HomeController@working' )->name('working');
 Route::post('/training', 'HomeController@train' )->name('training');
 Route::get('/equip', 'HomeController@equip');
 Route::get('/unEquip', 'HomeController@unEquip');
+Route::get('/contracts', 'HomeController@contracts')->name('contracts');
+Route::post('/fight', 'FightController@fight')->name('fight');
 
 Route::group(['middleware'=>['web','auth']], function () {
     Route::get('/show/{id}', function ($id){

@@ -10,8 +10,8 @@
                 <p class="card-text">Strength increase Your maximum amount of health points... </p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Base: {{Auth::User()->strength}}</li>
-                <li class="list-group-item">Sum: {{Auth::User()->strength}} </li>
+                <li class="list-group-item">Base: {{Auth::User()->getStat('strength')}}</li>
+                <li class="list-group-item">Sum: {{Auth::User()->calcStat('strength')}} </li>
                 <li class="list-group-item">Upgrade Cost: {{Auth::User()->calcTrainingCost(1)}} </li>
             </ul>
             <div class="card-body text-center">
@@ -28,8 +28,8 @@
                 <p class="card-text">Accuracy increase your chances to shoot enemy </p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Base: {{Auth::User()->accuracy}}</li>
-                <li class="list-group-item">Sum: {{Auth::User()->accuracy}} </li>
+                <li class="list-group-item">Base: {{Auth::User()->getStat('accuracy')}}</li>
+                <li class="list-group-item">Sum: {{Auth::User()->calcStat('accuracy')}} </li>
                 <li class="list-group-item">Upgrade Cost: {{Auth::User()->calcTrainingCost(2)}} </li>
             </ul>
             <div class="card-body text-center">
@@ -46,8 +46,8 @@
                 <p class="card-text">Bargaining increase your income from missions </p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Base: {{Auth::User()->accuracy}}</li>
-                <li class="list-group-item">Sum: {{Auth::User()->accuracy}} </li>
+                <li class="list-group-item">Base: {{Auth::User()->getStat('bargaining')}}</li>
+                <li class="list-group-item">Sum: {{Auth::User()->calcStat('bargaining')}} </li>
                 <li class="list-group-item">Upgrade Cost: {{Auth::User()->calcTrainingCost(3)}} </li>
             </ul>
             <div class="card-body text-center">

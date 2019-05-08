@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLogsTable extends Migration
+class CreateContractsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('logs', function (Blueprint $table) {
-            $table->Increments('id');
+        Schema::create('contracts', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('title');
-            $table->string('content');
-            $table->bigInteger('user_id')->unsigned();
+            $table->text('description');
+            $table->float('time');
+            $table->float('energy');
+            $table->string('image_path');
+            $table->integer('min_level');
             $table->timestamps();
-        });
-
-        Schema::table('logs', function (Blueprint $table){
-           $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -33,6 +32,6 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('logs');
+        Schema::dropIfExists('contracts');
     }
 }

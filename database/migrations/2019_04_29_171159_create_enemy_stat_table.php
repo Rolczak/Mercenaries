@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStatUserTable extends Migration
+class CreateEnemyStatTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateStatUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('stat_user', function (Blueprint $table) {
+        Schema::create('enemy_stat', function (Blueprint $table) {
             $table->unsignedBigInteger('stat_id');
-            $table->unsignedBigInteger('user_id');
-            $table->integer('value')->default(1);
-            $table->primary(['stat_id', 'user_id']);
+            $table->unsignedBigInteger('enemy_id');
+        });
 
-        });
-        Schema::table('stat_user', function (Blueprint $table){
+        Schema::table('enemy_stat', function (Blueprint $table) {
             $table->foreign('stat_id')->references('id')->on('stats');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('enemy_id')->references('id')->on('enemies');
         });
+
     }
 
     /**
@@ -33,6 +32,6 @@ class CreateStatUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stat_user');
+        Schema::dropIfExists('enemy_stat');
     }
 }

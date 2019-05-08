@@ -22,14 +22,16 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('credits')->default(100);
             $table->integer('uranium')->default(0);
-            $table->integer('actionpoints')->default(50);
-            $table->integer('role_id')->default(1)->unsigned();
-            $table->timestamp('lastenergyupdate')->default(Carbon::now()->toDateTimeString());
+            $table->integer('action_points')->default(50);
+            $table->unsignedInteger('role_id')->default(1);
+            $table->timestamp('last_energy_update')->default(Carbon::now()->toDateTimeString());
             $table->integer('experience')->default(0);
             $table->integer('level')->unsigned()->default(1);
             $table->rememberToken();
             $table->timestamps();
         });
+
+
     }
 
     /**

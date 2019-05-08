@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contract;
 use App\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,20 +38,21 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $val = request()->value;
-        if($val < 0)
+        if($val <= 0)
         {
-            redirect('home');
+            return redirect()->back()->with('err', 'Please select valid amount of action points.');
         }
 
-        else if($user->actionpoints >= $val)
+        else if($user->action_points >= $val)
         {
-            $user->actionpoints -= $val;
-            $user->credits += $val*10;
+            $user->action_points -= $val;
+            $cash = $val*10*$user->getStat('level');
+            $user->credits += $cash;
             $user->save();
-            return view('work');
+            return redirect()->back()->with('mod', 'You worked for '.$val.' action points and earned '.$cash.'. ');
         }
 
-        return view('home');
+        return redirect()->back()->with('err', 'You don\'t have action points to perform this action.');
     }
 
     public function train()
@@ -66,7 +68,7 @@ class HomeController extends Controller
             $user->save();
 
         }
-        return view('training');
+        return back();
     }
 
     public function equip()
@@ -79,6 +81,12 @@ class HomeController extends Controller
     {
         Auth::user()->unEquip(Item::find(request()->item));
         return back();
+    }
+
+    public function contracts()
+    {
+        $contracts = Contract::all();
+        return view('contracts', compact('contracts'));
     }
 
 }

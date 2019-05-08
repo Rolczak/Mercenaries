@@ -14,9 +14,13 @@ class CreateItemStatTable extends Migration
     public function up()
     {
         Schema::create('item_stat', function (Blueprint $table) {
-            $table->bigInteger('stat_id');
-            $table->bigInteger('item_id');
+            $table->unsignedBigInteger('stat_id');
+            $table->unsignedBigInteger('item_id');
             $table->integer('value');
+        });
+        Schema::table('item_stat', function (Blueprint $table) {
+            $table->foreign('stat_id')->references('id')->on('stats');
+            $table->foreign('item_id')->references('id')->on('items');
         });
     }
 
