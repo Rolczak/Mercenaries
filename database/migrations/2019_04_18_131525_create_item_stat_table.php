@@ -17,6 +17,7 @@ class CreateItemStatTable extends Migration
             $table->unsignedBigInteger('stat_id');
             $table->unsignedBigInteger('item_id');
             $table->integer('value');
+            $table->primary(['stat_id', 'item_id']);
         });
         Schema::table('item_stat', function (Blueprint $table) {
             $table->foreign('stat_id')->references('id')->on('stats');

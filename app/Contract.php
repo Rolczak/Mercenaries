@@ -13,7 +13,7 @@ class Contract extends Model
 
     public function randEnemy()
     {
-        return$this->enemies->random();
+        return $this->enemies->random();
     }
 }
 

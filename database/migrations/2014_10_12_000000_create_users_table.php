@@ -25,6 +25,8 @@ class CreateUsersTable extends Migration
             $table->integer('action_points')->default(50);
             $table->unsignedInteger('role_id')->default(1);
             $table->timestamp('last_energy_update')->default(Carbon::now()->toDateTimeString());
+            $table->timestamp('last_health_update')->default(Carbon::now()->toDateTimeString());
+            $table->timestamp('finish_job')->default(Carbon::now());
             $table->integer('experience')->default(0);
             $table->integer('level')->unsigned()->default(1);
             $table->rememberToken();

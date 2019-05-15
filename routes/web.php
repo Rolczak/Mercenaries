@@ -18,25 +18,35 @@ Route::get('/', function () {
 })->name('welcome');
 
 Auth::routes();
+Route::group(['middleware'=>['web', 'auth', 'HasJob']], function ()
+{
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/work', 'HomeController@work')->name('work');
+    Route::post('/work', 'HomeController@working' )->name('working');
+    Route::post('/training', 'HomeController@train' )->name('training');
+    Route::get('/equip', 'HomeController@equip');
+    Route::get('/unEquip', 'HomeController@unEquip');
+    Route::get('/contracts', 'HomeController@contracts')->name('contracts');
+    Route::post('/fight', 'FightController@fight')->name('fight');
+    Route::get('/training', function () {
+        return view('training');
+    });
+});
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/work', 'HomeController@work')->name('work');
-Route::post('/work', 'HomeController@working' )->name('working');
-Route::post('/training', 'HomeController@train' )->name('training');
-Route::get('/equip', 'HomeController@equip');
-Route::get('/unEquip', 'HomeController@unEquip');
-Route::get('/contracts', 'HomeController@contracts')->name('contracts');
-Route::post('/fight', 'FightController@fight')->name('fight');
 
 Route::group(['middleware'=>['web','auth']], function () {
     Route::get('/show/{id}', function ($id){
         return view('stats',compact('id'));
     });
-
-    Route::get('/training', function () {
-        return view('training');
+    Route::get('/job', function (){
+        return view('job');
     });
 
+    Route::get('/modRest', 'UraniumController@modRest');
+    Route::post('/rest', 'UraniumController@speedUpRest');
+    Route::get('/uranium', function (){
+        return view('uranium');
+    });
 });
 
 Route::group(['middleware'=>['web','auth', 'IsAdmin']], function(){

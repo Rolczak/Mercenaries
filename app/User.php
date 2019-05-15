@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use PHPUnit\Framework\Constraint\GreaterThan;
 
 class User extends Authenticatable
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'action_points', 'last_energy_update'
+        'name', 'email', 'password', 'action_points', 'last_energy_update', 'credits', 'uranium', 'finish_job'
     ];
 
     /**
@@ -70,6 +71,7 @@ class User extends Authenticatable
         return false;
     }
 
+
     public function calcEnergy()
     {
 
@@ -90,9 +92,34 @@ class User extends Authenticatable
         }
     }
 
+    public function calcHealth()
+    {
+
+        $last = Carbon::parse($this->last_health_update);
+        $diff = $last->diffInMinutes(Carbon::now());
+        $health = $this->getStat('currHp');
+        floor($diff);
+        if ($diff >= 60) {
+            for ($i = $diff / 60; $i > 0; $i--) {
+
+                $health += 10+$this->getStat('strength')+0.4*$this->getStat('level');
+
+            }
+
+            $this->last_health_update = Carbon::now()->toDateTimeString();
+            $this->save();
+            if($health > $this->calcMaxHealth())
+                $health = $this->calcMaxHealth();
+            $this->setStat('currHp',$health);
+        }
+    }
+
     public function getStat($stat)
     {
-        return $this->stats->where('name', $stat)->first()->pivot->value;
+        if($this->stats->where('name', $stat)->first())
+            return $this->stats->where('name', $stat)->first()->pivot->value;
+        else
+            return 1;
     }
 
     public function calcStat($stat)
@@ -108,7 +135,8 @@ class User extends Authenticatable
             if ($this->getEquipped('armor')->stats->where('name', $stat)->first()) {
                 $val += $this->getEquipped('armor')->stats->where('name', $stat)->first()->pivot->value;
             }
-
+        if($val == 0)
+            return 1;
 
         return $val;
     }
@@ -138,12 +166,18 @@ class User extends Authenticatable
 
     public function MinDamage()
     {
-        return $this->calcItemBonus('damage') - 0.1 * $this->calcItemBonus('damage');
+            $dmg = $this->calcItemBonus('damage') - 0.1 * $this->calcItemBonus('damage');
+            if ($dmg == 0)
+                return 1;
+            else return $dmg;
     }
 
     public function MaxDamage()
     {
-        return $this->calcItemBonus('damage') + 0.1 * $this->calcItemBonus('damage');
+        $dmg = $this->calcItemBonus('damage') + 0.1 * $this->calcItemBonus('damage');
+        if ($dmg == 0)
+            return 1;
+        else return $dmg;
     }
 
     public function checkLvlUp()
@@ -159,6 +193,14 @@ class User extends Authenticatable
         $this->setStat('level', $this->getStat('level')+1);
     }
 
+    public function hasJob()
+    {
+        if(Carbon::now()->greaterThan($this->finish_job))
+        {
+            return false;
+        }
+        return true;
+    }
     public function expToNext()
     {
         if(!ExpToNext::find($this->getStat('level')+1))
@@ -190,6 +232,16 @@ class User extends Authenticatable
         if ($this->action_points < 100)
             return $last;
         return false;
+    }
+
+    public function getJobTime()
+    {
+        return  $this->finish_job;
+    }
+
+    public function payJob($val)
+    {
+        $this->update(['uranium'=>$this->uranium - $val, 'finish_job' => Carbon::now()]);
     }
 
     public function calcTrainingCost($stat)

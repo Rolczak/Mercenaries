@@ -37,14 +37,6 @@ $stat = 0;
 
     </div>
 
-
     <button type="submit" form="create" class="btn btn-dark">Submit</button>
 
-<script>
-    $("#but").click(function(){
-        $(this).after("<div class='myClass'>Another paragraph!</div>");
-
-    });
-
-</script>
 @endsection('content')

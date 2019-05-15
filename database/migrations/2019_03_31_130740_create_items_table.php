@@ -17,6 +17,8 @@ class CreateItemsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('base_item_id');
             $table->unsignedBigInteger('user_id');
+            $table->string('name');
+            $table->string('color');
             $table->timestamps();
         });
     }

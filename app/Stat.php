@@ -14,4 +14,8 @@ class Stat extends Model
     public function items(){
         return $this->belongsToMany(Item::class)->withPivot('value');
     }
+
+    public function enemies(){
+        return $this->belongsToMany(Enemy::class)->withPivot('value');
+    }
 }

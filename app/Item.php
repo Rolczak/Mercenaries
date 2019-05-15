@@ -16,5 +16,4 @@ class Item extends Model
     {
         return $this->belongsTo(BaseItem::class);
     }
-
 }

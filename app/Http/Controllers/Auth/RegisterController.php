@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Job;
 use App\Stat;
 use App\User;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -68,6 +70,7 @@ class RegisterController extends Controller
         'name' => $data['name'],
         'email' => $data['email'],
         'password' => Hash::make($data['password']),
+        'finish_job' => Carbon::now()->subMinutes(1),
     ]);
     $user->stats()->attach(1);
     $user->stats()->attach(2);

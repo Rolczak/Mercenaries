@@ -40,6 +40,7 @@
             <li class="list-group-item">{{ucfirst($user->stats->find(3)->name)}}: {{$user->getStat('bargaining')}}
                 + {{$user->calcItemBonus('bargaining')}} = {{$user->calcStat('bargaining')}} </li>
             <li class="list-group-item">Damage: {{$user->minDamage()}} - {{$user->maxDamage()}} dmg</li>
+            <li class="list-group-item">Armor: {{$user->calcStat('defense')}}</li>
         </ul>
         <h2>Weapon: </h2>
         @if($user->hasEquipped('weapon'))
@@ -52,11 +53,15 @@
                         <li class="list-group-item bg-dark">{{ucfirst($stat->name)}}: {{$stat->pivot->value}}</li>
                     @endforeach
                 </ul>
-                <a href="{{action('HomeController@unEquip', ['item'=>$user->getEquipped('weapon')])}}"
-                   class="card-link">
-                    <button class="btn btn-outline-light my-1">UnEquip</button>
-                </a>
+                @if($user->id==Auth::user()->id)
+                    <a href="{{action('HomeController@unEquip', ['item'=>$user->getEquipped('weapon')])}}"
+                       class="card-link">
+                        <button class="btn btn-outline-light my-1">UnEquip</button>
+                    </a>
+                @endif
             </div>
+        @else
+            none
         @endif
 
         <h2>Armor: </h2>

@@ -21,6 +21,8 @@ class CreateContractsTable extends Migration
             $table->float('energy');
             $table->string('image_path');
             $table->integer('min_level');
+            $table->integer('credits');
+            $table->integer('exp');
             $table->timestamps();
         });
     }

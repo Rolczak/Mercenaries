@@ -12,6 +12,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <title>Mercenaries</title>
     {{Auth::User()->calcEnergy()}}
+    {{Auth::User()->calcHealth()}}
     {{Auth::User()->checkLvlUp()}}
 </head>
 
@@ -60,30 +61,8 @@
 <div class="container-fluid">
 
     <div class="row d-flex d-md-block flex-nowrap wrapper">
-        <div class="col-md-2 float-left col-1 pl-0 pr-0 collapse width " id="sidebar">
+        <div class="col-md-2 float-left col-1 pl-0 pr-0 collapse width position-fixed " id="sidebar">
             <div class="list-group border-0 card text-center text-md-left">
-              <!--  <a href="#menu1" class="list-group-item d-inline-block collapsed" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"><i class="fa fa-dashboard"></i> <span class="d-none d-md-inline">Item 1</span> </a>
-                <div class="collapse" id="menu1">
-                    <a href="#menu1sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">Subitem 1 </a>
-                    <div class="collapse" id="menu1sub1">
-                        <a href="#" class="list-group-item" data-parent="#menu1sub1">Subitem 1 a</a>
-                        <a href="#" class="list-group-item" data-parent="#menu1sub1">Subitem 2 b</a>
-                        <a href="#menu1sub1sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">Subitem 3 c </a>
-                        <div class="collapse" id="menu1sub1sub1">
-                            <a href="#" class="list-group-item" data-parent="#menu1sub1sub1">Subitem 3 c.1</a>
-                            <a href="#" class="list-group-item" data-parent="#menu1sub1sub1">Subitem 3 c.2</a>
-                        </div>
-                        <a href="#" class="list-group-item" data-parent="#menu1sub1">Subitem 4 d</a>
-                        <a href="#menu1sub1sub2" class="list-group-item" data-toggle="collapse" aria-expanded="false">Subitem 5 e </a>
-                        <div class="collapse" id="menu1sub1sub2">
-                            <a href="#" class="list-group-item" data-parent="#menu1sub1sub2">Subitem 5 e.1</a>
-                            <a href="#" class="list-group-item" data-parent="#menu1sub1sub2">Subitem 5 e.2</a>
-                        </div>
-                    </div>
-                    <a href="#" class="list-group-item" data-parent="#menu1">Subitem 2</a>
-                    <a href="#" class="list-group-item" data-parent="#menu1">Subitem 3</a>
-                </div>
-                -->
                 @if (Auth::User()->isAdmin())
                 <a href="#menu1" class="list-group-item d-inline-block collapsed" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false" style="background-color: gold; color: black;"><i class="fas fa-star"></i> <span class="d-none d-md-inline">Admin Panel</span></a>
                     <div class="collapse" id="menu1">
@@ -91,17 +70,6 @@
                         <div class="collapse" id="menu1sub1">
                          <a href="{{url('admin/logs/create')}}" class="list-group-item" data-parent="#menu1sub1">Create</a>
                             <a href="{{url('admin/logs')}}" class="list-group-item" data-parent="#menu1sub1">Edit</a>
-                            <!--  <a href="#menu1sub1sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">Subitem 3 c </a>
-                           <div class="collapse" id="menu1sub1sub1">
-                               <a href="#" class="list-group-item" data-parent="#menu1sub1sub1">Subitem 3 c.1</a>
-                               <a href="#" class="list-group-item" data-parent="#menu1sub1sub1">Subitem 3 c.2</a>
-                           </div>
-                           <a href="#" class="list-group-item" data-parent="#menu1sub1">Subitem 4 d</a>
-                           <a href="#menu1sub1sub2" class="list-group-item" data-toggle="collapse" aria-expanded="false">Subitem 5 e </a>
-                           <div class="collapse" id="menu1sub1sub2">
-                               <a href="#" class="list-group-item" data-parent="#menu1sub1sub2">Subitem 5 e.1</a>
-                               <a href="#" class="list-group-item" data-parent="#menu1sub1sub2">Subitem 5 e.2</a>
-                           </div>-->
                        </div>
                         <a href="#menu1sub2" class="list-group-item" data-toggle="collapse" aria-expanded="false">Items</a>
                         <div class="collapse" id="menu1sub2">
@@ -125,6 +93,102 @@
             </div>
         </div>
         <main class="col-md-10 col px-5 pl-md-2 pt-2 main mx-auto">
+            @if(Session::has('err'))
+                <div class="modal fade" id="errModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    @if(Session::has('errTitle'))
+                                        {{Session::get('errTitle')}}
+                                    @else
+                                        An Error Occurred During Action</h5>
+                                    @endif
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-danger">
+                                {{Session::get('err')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+
+                        $("#errModal").modal('show');
+
+                    });
+                </script>
+
+            @elseif(Session::has('mod'))
+                <div class="modal fade" id="dialModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-info">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    @if(Session::has('modTitle'))
+                                        {{Session::get('modTitle')}}
+                                    @else
+                                        Information</h5>
+                                    @endif
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{Session::get('mod')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+
+                        $("#dialModal").modal('show');
+
+                    });
+                </script>
+            @elseif(Session::has('micro'))
+                <div class="modal fade" id="microModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-dark rounded text-white">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    @if(Session::has('microTitle'))
+                                        {{Session::get('microTitle')}}
+                                    @else
+                                        Uranium Shop</h5>
+                                @endif
+                                <button type="button"  style="color: white;" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                               {{Session::get('micro')}} {{Session::get('microVal')}}<i style="color: #1eff2d;" class="fas fa-radiation"></i>
+                            </div>
+                                <div class="modal-footer">
+                                    <form action="{{action('UraniumController@speedUpRest')}}" id="mic" method="post">
+                                        @csrf
+                                        <input type="hidden" name="val" value="{{Session::get('microVal')}}">
+                                    </form>
+                                        <button class="btn-secondary btn" form="mic">Pay {{Session::get('microVal')}} <i style="color: #1eff2d;" class="fas fa-radiation"></i></button>
+
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+
+                        $("#microModal").modal('show');
+
+                    });
+                </script>
+
+            @endif
           @yield('content')
         </main>
     </div>

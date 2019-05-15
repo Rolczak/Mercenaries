@@ -16,6 +16,8 @@ class CreateEnemyStatTable extends Migration
         Schema::create('enemy_stat', function (Blueprint $table) {
             $table->unsignedBigInteger('stat_id');
             $table->unsignedBigInteger('enemy_id');
+            $table->integer('value');
+            $table->primary(['stat_id', 'enemy_id']);
         });
 
         Schema::table('enemy_stat', function (Blueprint $table) {

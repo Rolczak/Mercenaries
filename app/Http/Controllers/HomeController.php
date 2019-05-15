@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contract;
+use App\Http\Middleware\HasJob;
 use App\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
