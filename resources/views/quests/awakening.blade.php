@@ -1,0 +1,4 @@
+I woke up in some weird room with hole in ceiling. It was cold. I didn’t know what happened. I lay on the floor only in underwear without clothes. <br>
+I was sore. I pruned to the wall and lean on wall. After paralyzing back and head pain I came into conclusion that probably I felt from roof, but for what I went there? And what I’m doing here? I laid down for 10 minutes. Pain didn’t subside and I need to get out of here and the most important to find how I get here?
+Door was collapsed so I had an idea to get out by window. I quit idea when I saw how far above ground I am. I was lucky, because on the right from window was another room with balcony.
+Not that far – I thought, so through the pain which pierced my body I was manage to get there. I looked for a while on surrounding. Little huts far away and pine forest.  Don’t wasting time I slip inside by half-opened window. Inside I saw dead soldier…

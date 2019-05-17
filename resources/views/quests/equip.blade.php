@@ -1,0 +1,1 @@
+I took machete and his uniform. He didn't need this clothes anymore and for me is the only chance to survive.

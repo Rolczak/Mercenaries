@@ -15,7 +15,6 @@ class UpdateItemsTable extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
             $table->foreign('base_item_id')->references('id')->on('base_items');
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

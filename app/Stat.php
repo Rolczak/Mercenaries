@@ -18,4 +18,9 @@ class Stat extends Model
     public function enemies(){
         return $this->belongsToMany(Enemy::class)->withPivot('value');
     }
+
+    public function prefixes()
+    {
+        return $this->belongsToMany(Prefix::class)->withPivot('value');
+    }
 }

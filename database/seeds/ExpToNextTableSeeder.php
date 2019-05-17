@@ -18,5 +18,20 @@ class ExpToNextTableSeeder extends Seeder
         ExpToNext::create([
             'experience' => 10,
         ]);
+        ExpToNext::create([
+            'experience' => 50,
+        ]);
+        ExpToNext::create([
+            'experience' => 120,
+        ]);
+        ExpToNext::create([
+            'experience' => 380,
+        ]);
+        ExpToNext::create([
+            'experience' => 780,
+        ]);
+        ExpToNext::create([
+            'experience' => 9999,
+        ]);
     }
 }

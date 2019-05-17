@@ -3,7 +3,7 @@
 <ul  class="list-group">
     @foreach($logs as $log)
         <li class="list-group-item">
-            <div class="card text-white bg-dark">
+            <div class="card text-white bg-light">
                 <div class="card-body">
                     <span class="text-right"><small >{{$log->created_at}}</small><a style="float: right;" class="card-link" href="{{route('logs.edit', $log->id)}}">Edit</a></span>
                   <h5 class="card-title">{{$log->id}}. {{$log->title}}</h5>
@@ -14,6 +14,7 @@
 
 
             </div>
+        </li>
         <br/>
     @endforeach
 </ul>

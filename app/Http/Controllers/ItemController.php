@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BaseItem;
+use App\ItemGenerator;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -45,6 +46,11 @@ class ItemController extends Controller
         $item = BaseItem::findOrFail($id);
         $item->delete();
         return $this->index();
+    }
+
+    public function generate()
+    {
+        return ItemGenerator::generateItem(request()->lvl);
     }
 
 }

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Job;
+use App\Mail\WelcomeMail;
+use App\Shop;
 use App\Stat;
 use App\User;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -46,7 +49,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -61,33 +64,37 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \App\User
      */
     protected function create(array $data)
-{
-    $user = User::create([
-        'name' => $data['name'],
-        'email' => $data['email'],
-        'password' => Hash::make($data['password']),
-        'finish_job' => Carbon::now()->subMinutes(1),
-    ]);
-    $user->stats()->attach(1);
-    $user->stats()->attach(2);
-    $user->stats()->attach(3);
-    $user->stats()->attach(4);
-    $user->stats()->attach(5);
-    $user->stats()->attach(6);
-    $user->stats()->attach(10);
-    $user->stats()->attach(11);
-    $user->stats()->updateExistingPivot(1, ['value'=>1]);
-    $user->stats()->updateExistingPivot(2, ['value'=>1]);
-    $user->stats()->updateExistingPivot(3, ['value'=>1]);
-    $user->stats()->updateExistingPivot(4, ['value'=>100]);
-    $user->stats()->updateExistingPivot(5, ['value'=>0]);
-    $user->stats()->updateExistingPivot(6, ['value'=>0]);
-    $user->stats()->updateExistingPivot(10, ['value'=>0]);
-    $user->stats()->updateExistingPivot(11, ['value'=>1]);
-    return $user;
-}
+    {
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'finish_job' => Carbon::now()->subMinutes(1),
+            'uranium' => 10,
+        ]);
+        $user->stats()->attach(1);
+        $user->stats()->attach(2);
+        $user->stats()->attach(3);
+        $user->stats()->attach(4);
+        $user->stats()->attach(5);
+        $user->stats()->attach(6);
+        $user->stats()->attach(10);
+        $user->stats()->attach(11);
+        $user->stats()->updateExistingPivot(1, ['value' => 1]);
+        $user->stats()->updateExistingPivot(2, ['value' => 1]);
+        $user->stats()->updateExistingPivot(3, ['value' => 1]);
+        $user->stats()->updateExistingPivot(4, ['value' => 100]);
+        $user->stats()->updateExistingPivot(5, ['value' => 0]);
+        $user->stats()->updateExistingPivot(6, ['value' => 0]);
+        $user->stats()->updateExistingPivot(10, ['value' => 0]);
+        $user->stats()->updateExistingPivot(11, ['value' => 1]);
+        $shop = Shop::create(['user_id' => $user->id, 'update_time' => Carbon::now()]);
+        $shop->generateItemsForShop($user);
+
+        return $user;
+    }
 }

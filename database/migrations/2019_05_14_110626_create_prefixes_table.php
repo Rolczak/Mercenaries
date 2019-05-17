@@ -18,6 +18,7 @@ class CreatePrefixesTable extends Migration
             $table->string('name');
             $table->string('level');
             $table->string('color');
+            $table->enum('type',['weapon','armor']);
             $table->timestamps();
         });
 

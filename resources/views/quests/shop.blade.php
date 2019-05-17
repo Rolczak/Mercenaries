@@ -1,0 +1,1 @@
+When I returning from training like usually. One of local shop manager take me inside his shop and involve me into world of mercenaries.

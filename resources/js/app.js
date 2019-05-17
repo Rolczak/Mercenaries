@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -7,6 +6,8 @@
 
 require('./bootstrap');
 
+window.jQuery = require('jquery');
+window.jQueryValidation = require('jquery-validation');
 window.Vue = require('vue');
 
 /**

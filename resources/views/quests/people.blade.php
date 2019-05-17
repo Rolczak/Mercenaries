@@ -1,0 +1,1 @@
+After days of travel I found the camp. People here don't trust me. I need to work and train with them.

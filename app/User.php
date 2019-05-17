@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\LvlUp;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -61,7 +62,12 @@ class User extends Authenticatable
 
     public function items()
     {
-        return $this->hasMany(Item::class);
+        return $this->belongsToMany(Item::class);
+    }
+
+    public function quests()
+    {
+        return $this->belongsToMany(Quest::class, 'quest_user');
     }
 
     public function isAdmin()
@@ -82,7 +88,7 @@ class User extends Authenticatable
         if ($diff >= 10) {
             for ($i = $diff / 10; $i > 0; $i--) {
 
-                if ($energy < 100)
+                if ($energy < 500)
                     $energy++;
 
             }
@@ -102,21 +108,21 @@ class User extends Authenticatable
         if ($diff >= 60) {
             for ($i = $diff / 60; $i > 0; $i--) {
 
-                $health += 10+$this->getStat('strength')+0.4*$this->getStat('level');
+                $health += 10 + $this->getStat('strength') + 0.4 * $this->getStat('level');
 
             }
 
             $this->last_health_update = Carbon::now()->toDateTimeString();
             $this->save();
-            if($health > $this->calcMaxHealth())
+            if ($health > $this->calcMaxHealth())
                 $health = $this->calcMaxHealth();
-            $this->setStat('currHp',$health);
+            $this->setStat('currHp', $health);
         }
     }
 
     public function getStat($stat)
     {
-        if($this->stats->where('name', $stat)->first())
+        if ($this->stats->where('name', $stat)->first())
             return $this->stats->where('name', $stat)->first()->pivot->value;
         else
             return 1;
@@ -135,7 +141,7 @@ class User extends Authenticatable
             if ($this->getEquipped('armor')->stats->where('name', $stat)->first()) {
                 $val += $this->getEquipped('armor')->stats->where('name', $stat)->first()->pivot->value;
             }
-        if($val == 0)
+        if ($val == 0)
             return 1;
 
         return $val;
@@ -143,7 +149,7 @@ class User extends Authenticatable
 
     public function setStat($stat, $val)
     {
-        return $this->stats()->updateExistingPivot($this->stats->where('name', $stat)->first()->id, ['value' =>$val]);
+        return $this->stats()->updateExistingPivot($this->stats->where('name', $stat)->first()->id, ['value' => $val]);
     }
 
     public function calcItemBonus($stat)
@@ -166,10 +172,10 @@ class User extends Authenticatable
 
     public function MinDamage()
     {
-            $dmg = $this->calcItemBonus('damage') - 0.1 * $this->calcItemBonus('damage');
-            if ($dmg == 0)
-                return 1;
-            else return $dmg;
+        $dmg = $this->calcItemBonus('damage') - 0.1 * $this->calcItemBonus('damage');
+        if ($dmg == 0)
+            return 1;
+        else return $dmg;
     }
 
     public function MaxDamage()
@@ -182,36 +188,37 @@ class User extends Authenticatable
 
     public function checkLvlUp()
     {
-        if($this->expToNext()!= 'max')
-        if($this->getStat('experience')>=$this->expToNext())
-            $this->lvlUp();
+        if ($this->expToNext() != 'max')
+            if ($this->getStat('experience') >= $this->expToNext())
+                $this->lvlUp();
     }
 
     public function lvlUp()
     {
-        $this->setStat('experience', $this->getStat('experience')-$this->expToNext());
-        $this->setStat('level', $this->getStat('level')+1);
+        $this->setStat('experience', $this->getStat('experience') - $this->expToNext());
+        $this->setStat('level', $this->getStat('level') + 1);
+        $this->notify(new LvlUp());
     }
 
     public function hasJob()
     {
-        if(Carbon::now()->greaterThan($this->finish_job))
-        {
+        if (Carbon::now()->greaterThan($this->finish_job)) {
             return false;
         }
         return true;
     }
+
     public function expToNext()
     {
-        if(!ExpToNext::find($this->getStat('level')+1))
+        if (!ExpToNext::find($this->getStat('level') + 1))
             return 'max';
         else
-             return ExpToNext::find($this->getStat('level')+1)->experience;
+            return ExpToNext::find($this->getStat('level') + 1)->experience;
     }
 
     public function calcMaxHealth()
     {
-        $max = 100+10*$this->getStat('level');
+        $max = 100 + 10 * $this->getStat('level');
         $i = $this->calcStat('strength');
 
         for ($i; $i > 1; $i--) {
@@ -229,35 +236,38 @@ class User extends Authenticatable
     {
         $last = Carbon::parse($this->last_energy_update);
         $last->addMinutes(10);
-        if ($this->action_points < 100)
+        if ($this->action_points < 500)
             return $last;
         return false;
     }
 
     public function getJobTime()
     {
-        return  $this->finish_job;
+        return $this->finish_job;
     }
 
     public function payJob($val)
     {
-        $this->update(['uranium'=>$this->uranium - $val, 'finish_job' => Carbon::now()]);
+        $this->update(['uranium' => $this->uranium - $val, 'finish_job' => Carbon::now()]);
     }
 
     public function calcTrainingCost($stat)
     {
         switch ($stat) {
             case 1:
-                return round($this->stats->find($stat)->pivot->value * 100);
+                // return round($this->stats->find($stat)->pivot->value * 100);
+                return floor(pow($this->stats->find($stat)->pivot->value, (2.3 + 0.3)));
                 break;
 
             case 2:
-                return round($this->stats->find($stat)->pivot->value * 100);
+                // return round($this->stats->find($stat)->pivot->value * 100);
+                return floor(pow($this->stats->find($stat)->pivot->value, (2.3 + 0.3)));
                 break;
 
             case 3:
-                $val = $this->stats->find($stat)->pivot->value;
-                return round($val * 100 + (15 / 100 * ($val + 50)));
+                // $val = $this->stats->find($stat)->pivot->value;
+                // return round($val * 100 + (15 / 100 * ($val + 50)));
+                return floor(pow($this->stats->find($stat)->pivot->value, (2.3 + 0.5)));
                 break;
 
             default:
@@ -305,9 +315,9 @@ class User extends Authenticatable
 
     public function equip($item)
     {
-            $id = $this->stats->where('name', $item->base_item->type)->first()->id;
-            $this->stats()->updateExistingPivot($id, ['value' => $item->id]);
-            return true;
+        $id = $this->stats->where('name', $item->base_item->type)->first()->id;
+        $this->stats()->updateExistingPivot($id, ['value' => $item->id]);
+        return true;
     }
 
 }

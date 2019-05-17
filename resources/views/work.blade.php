@@ -1,19 +1,19 @@
 @extends('layouts.main')
 
 @section('content')
-    <h3>Tu jest strona związana z zarabianiem piniędzorów przez pracę. </h3>
-    <br/><h3>Jeszcze nie zdecydowałem czy będzie to akord czy godzinowa praca</h3>
 
-
-<div class="row">
-    <div class="col">
-    <form class="form" method="post" action="{{route('work')}}">
-        @csrf
-        <label for="id">How many action points You want to spend?</label>
-        <input class="form-control" id="workhours" type="number" name="value" min="0">
-        <input class="btn-dark" type="submit" value="Work!">
-    </form>
+    <div class="jumbotron">
+        <h1 class="display-3">Work</h1>
+        <p class="lead">Here you can spend energy to earn money</p>
+        <hr class="my-4">
+        <form class="form" method="post" action="{{route('work')}}">
+            @csrf
+            <div class="form-group">
+            <label for="workhours">How many action points You want to spend? </label>
+            <input class="form-control col-md-4" id="workhours" type="number" name="value" min="0">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Work!">
+        </form>
     </div>
-</div>
 @stop
 

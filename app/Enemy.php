@@ -24,12 +24,12 @@ class Enemy extends Model
 
     public function MinDamage()
     {
-        return $this->getStat('damage') - 0.1 * $this->getStat('damage');
+        return self::clamp($this->getStat('damage') - 0.1 * $this->getStat('damage'),1,999);
     }
 
     public function MaxDamage()
     {
-        return $this->getStat('damage') + 0.1 * $this->getStat('damage');
+        return self::clamp($this->getStat('damage') + 0.1 * $this->getStat('damage'),1,999);
     }
 
     public static function  clamp($current, $min, $max) {
